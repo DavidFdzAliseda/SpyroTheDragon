@@ -4,6 +4,9 @@
     <string name="characters">Personajes</string>
     <string name="collectibles">Coleccionables</string>
     <string name="title_about">Acerca de</string>
-    <string name="text_about">Aplicación desarrollada por \n <b>Lindsay Barrero Martínez.</b></string>
+    <string name="text_about">Aplicación desarrollada por \n <b>David César Fernández Aliseda.</b></string>
     <string name="accept">Aceptar</string>
+    <string name="bocadillo_characters">Aquí podrás explorar a todos los personajes del mundo de Spyro</string>
+    <string name="bocadillo_worlds">Aquí podrás explorar todos los mundos a los que viaja Spyro</string>
+    <string name="bocadillo_collectibles">Aquí podrás explorar todos los objetos que puede coleccionar Spyro</string>
 </resources>

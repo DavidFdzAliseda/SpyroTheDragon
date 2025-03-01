@@ -1,0 +1,54 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/guideLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_transparent"
+    android:clickable="true"
+    android:focusable="true"
+    android:visibility="gone">
+
+    <!-- TextView positioned 500dp from the top and centered horizontally -->
+    <TextView
+        android:id="@+id/bocadillo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="450dp"
+        android:background="@drawable/bocadillo"
+        android:gravity="center"
+        android:maxLines="4"
+        android:padding="20dp"
+        android:text="@string/bocadillo_characters"
+        android:textColor="@color/white"
+        android:textSize="24sp" />
+
+    <!-- Button positioned just above the TextView and flush against the right edge -->
+    <Button
+        android:id="@+id/btnSiguiente"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="400dp"
+        android:layout_marginEnd="20dp"
+        android:layout_gravity="end"
+        android:text="Siguiente"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:background="@color/transparent"
+        android:textColor="@color/purple"/>
+
+
+    <Button
+        android:id="@+id/btnSaltar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="Omitir tutorial"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:background="@color/transparent"
+        android:textColor="@color/purple"/>
+
+
+</FrameLayout>
