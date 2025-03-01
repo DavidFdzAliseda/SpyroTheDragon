@@ -1,9 +1,15 @@
 package dam.pmdm.spyrothedragon.ui;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.content.SharedPreferences;
+import android.content.Context;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -30,11 +36,60 @@ public class CharactersFragment extends Fragment {
     private RecyclerView recyclerView;
     private CharactersAdapter adapter;
     private List<Character> charactersList;
+    private static final String PREFS_NAME = "appPrefs";
+    private static final String TUTORIAL_FINISHED_KEY = "tutorialFinished";
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentCharactersBinding.inflate(inflater, container, false);
+
+        // Check tutorial state and set the guide visible if not finished
+        SharedPreferences preferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        boolean tutorialFinished = preferences.getBoolean(TUTORIAL_FINISHED_KEY, false);
+        if (!tutorialFinished) {
+            View guideLayout = requireActivity().findViewById(R.id.tutorialLayout);
+            if (guideLayout != null) {
+                guideLayout.setVisibility(View.VISIBLE);
+                // Retrieve the TextView and start the typewriter animation
+                TextView bocadillo = guideLayout.findViewById(R.id.bocadillo);
+                if (bocadillo != null) {
+                    animateBocadillo(bocadillo);
+                }
+
+                View navView = requireActivity().findViewById(R.id.action_info);
+                if (navView != null) {
+                    navView.setClickable(false);
+                    navView.setEnabled(false);
+                }
+
+                // Retrieve and set the OnClickListener for the "Omitir tutorial" button
+                Button btnSaltar = guideLayout.findViewById(R.id.btnSaltar);
+                if (btnSaltar != null) {
+                    btnSaltar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            guideLayout.animate()
+                                    .alpha(0f)
+                                    .setDuration(300) // Duration in milliseconds
+                                    .withEndAction(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            guideLayout.setVisibility(View.GONE);
+                                            // Optionally update preferences here to mark tutorial as finished
+                                        }
+                                    });
+                            // Optionally update the preference to mark the tutorial as finished
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putBoolean(TUTORIAL_FINISHED_KEY, true);
+                            editor.apply();
+                        }
+                    });
+                }
+            }
+        }
+
         // Inicializamos el RecyclerView y el adaptador
         recyclerView = binding.recyclerViewCharacters;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -44,6 +99,7 @@ public class CharactersFragment extends Fragment {
 
         // Cargamos los personajes desde el XML
         loadCharacters();
+
         return binding.getRoot();
     }
 
@@ -104,5 +160,26 @@ public class CharactersFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
+    private void animateBocadillo(TextView bocadillo) {
+        final String fullText = bocadillo.getText().toString(); // Save complete message
+        bocadillo.setText(""); // Clear for the animation
+        final Handler handler = new Handler();
+        final int delay = 25; // Delay between characters in milliseconds
+        final int[] index = {0};
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (index[0] < fullText.length()) {
+                    // Append one more character and update the TextView
+                    bocadillo.setText(fullText.substring(0, index[0] + 1));
+                    index[0]++;
+                    handler.postDelayed(this, delay);
+                }
+            }
+        }, delay);
+    }
+
 
 }

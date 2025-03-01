@@ -31,9 +31,6 @@
             app:menu="@menu/bottom_nav_menu" />
     </androidx.constraintlayout.widget.ConstraintLayout>
     <include
-        android:id="@+id/welcomeLayout"
-        layout="@layout/welcome"/>
-    <include
         android:id="@+id/tutorialLayout"
         layout="@layout/guide"/>
 </RelativeLayout>
