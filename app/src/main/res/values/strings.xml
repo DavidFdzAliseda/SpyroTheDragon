@@ -9,4 +9,6 @@
     <string name="bocadillo_characters">Aquí podrás explorar a todos los personajes del mundo de Spyro</string>
     <string name="bocadillo_worlds">Aquí podrás explorar todos los mundos a los que viaja Spyro</string>
     <string name="bocadillo_collectibles">Aquí podrás explorar todos los objetos que puede coleccionar Spyro</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -3,6 +3,7 @@ package dam.pmdm.spyrothedragon;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -41,8 +42,12 @@ public class MainActivity extends AppCompatActivity {
                     destination.getId() == R.id.navigation_collectibles) {
                 // Para las pantallas de los tabs, no queremos que aparezca la flecha de atrás
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            }
-            else {
+                getSupportActionBar().show();
+                binding.navView.setVisibility(View.VISIBLE);
+            } else if (destination.getId() == R.id.navigation_welcome) {
+                getSupportActionBar().hide();
+                binding.navView.setVisibility(View.GONE);
+            } else {
                 // Si se navega a una pantalla donde se desea mostrar la flecha de atrás, habilítala
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
