@@ -40,14 +40,14 @@ public class WelcomeFragment extends Fragment {
         boolean tutorialFinished = preferences.getBoolean(TUTORIAL_FINISHED_KEY, false);
 
         // If the tutorial has been finished, navigate immediately to the next fragment
-        if (tutorialFinished) {
+        /*if (tutorialFinished) {
             navController.navigate(R.id.action_navigation_welcome_to_navigation_characters,
                     null,
                     new NavOptions.Builder()
                             .setExitAnim(R.anim.circular_exit)
                             .build());
             return;
-        }
+        }*/
 
         // Otherwise, remain in this fragment and wait for user action
         binding.btnComenzar.setOnClickListener(v -> {

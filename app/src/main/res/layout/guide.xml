@@ -9,33 +9,44 @@
     android:visibility="gone">
 
     <!-- TextView positioned 500dp from the top and centered horizontally -->
+
     <TextView
         android:id="@+id/bocadillo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="450dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="100dp"
         android:background="@drawable/bocadillo"
         android:gravity="center"
+        android:minLines="2"
         android:maxLines="4"
-        android:padding="20dp"
+        android:padding="25dp"
         android:text="@string/bocadillo_characters"
         android:textColor="@color/white"
         android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/sign"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/empty_circle"
+        android:gravity="center"/>
 
     <!-- Button positioned just above the TextView and flush against the right edge -->
     <Button
         android:id="@+id/btnSiguiente"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="400dp"
-        android:layout_marginEnd="20dp"
-        android:layout_gravity="end"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="250dp"
         android:text="Siguiente"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:background="@color/transparent"
+        android:background="@drawable/button_shape"
         android:textColor="@color/purple"/>
 
 
@@ -47,8 +58,7 @@
         android:text="Omitir tutorial"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:background="@color/transparent"
+        android:background="@drawable/button_shape"
         android:textColor="@color/purple"/>
-
 
 </FrameLayout>

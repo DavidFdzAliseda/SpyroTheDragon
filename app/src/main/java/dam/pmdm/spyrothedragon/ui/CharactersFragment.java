@@ -3,18 +3,25 @@ package dam.pmdm.spyrothedragon.ui;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.content.SharedPreferences;
 import android.content.Context;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -48,7 +55,7 @@ public class CharactersFragment extends Fragment {
         // Check tutorial state and set the guide visible if not finished
         SharedPreferences preferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         boolean tutorialFinished = preferences.getBoolean(TUTORIAL_FINISHED_KEY, false);
-        if (!tutorialFinished) {
+        //if (!tutorialFinished) {
             View guideLayout = requireActivity().findViewById(R.id.tutorialLayout);
             if (guideLayout != null) {
                 guideLayout.setVisibility(View.VISIBLE);
@@ -56,6 +63,20 @@ public class CharactersFragment extends Fragment {
                 TextView bocadillo = guideLayout.findViewById(R.id.bocadillo);
                 if (bocadillo != null) {
                     animateBocadillo(bocadillo);
+                }
+
+                View signView = guideLayout.findViewById(R.id.sign); // Obtén el elemento por su ID
+
+                if (signView != null) {
+
+                    signView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Obtener el ancho en píxeles
+                            int width = signView.getWidth();
+                            redimensionarSign(signView, width);
+                        }
+                    });
                 }
 
                 View navView = requireActivity().findViewById(R.id.action_info);
@@ -88,7 +109,7 @@ public class CharactersFragment extends Fragment {
                     });
                 }
             }
-        }
+        //}
 
         // Inicializamos el RecyclerView y el adaptador
         recyclerView = binding.recyclerViewCharacters;
@@ -181,5 +202,56 @@ public class CharactersFragment extends Fragment {
         }, delay);
     }
 
+    // Method to animate the arrow
+    // Method to animate the arrow
+    private void animateArrow(ImageView arrow, View navCharacters) {
+        if (navCharacters != null) {
+            arrow.setX(navCharacters.getX());
+            arrow.setY(navCharacters.getY() - arrow.getHeight());
+        }
+    }
 
+    private void setCircle() {
+        new Handler().postDelayed(() -> {
+            TextView bocadillo = requireView().findViewById(R.id.bocadillo);
+            BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.navView);
+            View itemCharacters = bottomNavigationView.findViewById(R.id.nav_characters);
+
+            bocadillo.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    // Ensure this only runs once
+                    bocadillo.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                    // Set the CircleDrawable to the nav_characters item
+                    itemCharacters.setBackground(new CircleDrawable());
+                }
+            });
+        }, 500);
+    }
+
+    public static int getScreenWidth(Context context) {
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.widthPixels;
+    }
+
+    public void redimensionarSign(View signView, int width) {
+        // Obtén los parámetros actuales del layout
+        ViewGroup.LayoutParams params = signView.getLayoutParams();
+
+
+        // Si el View tiene un LayoutParams de tipo MarginLayoutParams, puedes ajustar los márgenes
+        if (params instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) params;
+
+            // Establece el margen izquierdo
+
+            marginLayoutParams.leftMargin = ((getScreenWidth(requireContext()) / 6 - width/2));
+
+            // Aplica los nuevos parámetros
+            signView.setLayoutParams(marginLayoutParams);
+        }
+    }
 }

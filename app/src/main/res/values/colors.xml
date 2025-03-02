@@ -2,6 +2,7 @@
 <resources>
     <color name="pink">#c55e97</color>
     <color name="purple">#9c35ba</color>
+    <color name="purple40">#669C35BA</color>
     <color name="purple60">#D99C35BA</color>
     <color name="orange">#e7a56e</color>
     <color name="yellow">#fbdf6a</color>
