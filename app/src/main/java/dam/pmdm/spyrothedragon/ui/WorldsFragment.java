@@ -1,12 +1,22 @@
 package dam.pmdm.spyrothedragon.ui;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavOptions;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +31,7 @@ import dam.pmdm.spyrothedragon.R;
 import dam.pmdm.spyrothedragon.adapters.WorldsAdapter;
 import dam.pmdm.spyrothedragon.databinding.FragmentWorldsBinding;
 import dam.pmdm.spyrothedragon.models.World;
+import dam.pmdm.spyrothedragon.utils.Utilities;
 
 public class WorldsFragment extends Fragment {
 
@@ -32,6 +43,8 @@ public class WorldsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+        mostrarGuia();
+
         binding = FragmentWorldsBinding.inflate(inflater, container, false);
         recyclerView = binding.recyclerViewWorlds;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -41,6 +54,77 @@ public class WorldsFragment extends Fragment {
 
         loadWorlds();
         return binding.getRoot();
+    }
+
+    private void mostrarGuia() {
+        View guideLayout = requireActivity().findViewById(R.id.tutorialLayout);
+        if (guideLayout != null) {
+            guideLayout.setVisibility(View.VISIBLE);
+            // Se muestra el texto y se anima
+            TextView bocadillo = guideLayout.findViewById(R.id.bocadilloWorlds);
+            if (bocadillo != null) {
+                bocadillo.setText(R.string.bocadillo_worlds);
+                //animateBocadillo(bocadillo);
+            }
+            //Se reubica la señal de la seccion
+            View signView = guideLayout.findViewById(R.id.sign); // Obtén el elemento por su ID
+            if (signView != null) {
+                signView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Obtener el ancho en píxeles
+                        int width = signView.getWidth();
+                        redimensionarSign(signView, width);
+                    }
+                });
+            }
+            //Boton siguiente
+            Button btnSiguiente = guideLayout.findViewById(R.id.btnSiguiente);
+            btnSiguiente.setOnClickListener(v -> {
+                NavHostFragment.findNavController(this).navigate(R.id.action_navigation_worlds_to_navigation_collectibles,
+                        null,
+                        new NavOptions.Builder()
+                                .setExitAnim(R.anim.slide_out_left)
+                                .setEnterAnim(R.anim.slide_in_right)
+                                .build());
+            });
+        }
+    }
+
+    private void redimensionarSign(View signView, int width) {
+    // Obtén los parámetros actuales del layout
+        ViewGroup.LayoutParams params = signView.getLayoutParams();
+
+        // Si el View tiene un LayoutParams de tipo MarginLayoutParams, puedes ajustar los márgenes
+        if (params instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) params;
+
+            // Establece el margen izquierdo
+
+            marginLayoutParams.leftMargin = ((getScreenWidth(requireContext()) / 2 - width/2));
+            marginLayoutParams.bottomMargin = -50;
+            // Aplica los nuevos parámetros
+            signView.setLayoutParams(marginLayoutParams);
+        }
+
+        //Animacion de circulos
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(signView, "scaleX", 0.5f, 1f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(signView, "scaleY", 0.5f, 1f);
+
+        scaleX.setRepeatCount(2);
+        scaleY.setRepeatCount(2);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(scaleX, scaleY);
+        animatorSet.setDuration(1000);
+        animatorSet.start();
+    }
+
+    public static int getScreenWidth(Context context) {
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.widthPixels;
     }
 
     @Override
@@ -98,5 +182,29 @@ public class WorldsFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void animateBocadillo(View guideLayout) {
+        TextView bocadillo = guideLayout.findViewById(R.id.bocadilloWorlds);
+        final String fullText = bocadillo.getText().toString(); // Save complete message
+        bocadillo.setText(""); // Clear for the animation
+        final Handler handler = new Handler();
+        final int delay = 25; // Delay between characters in milliseconds
+        final int[] index = {0};
+        TextView btnSiguiente = guideLayout.findViewById(R.id.btnSiguiente);
+        btnSiguiente.setEnabled(false);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (index[0] < fullText.length()) {
+                    // Append one more character and update the TextView
+                    bocadillo.setText(fullText.substring(0, index[0] + 1));
+                    index[0]++;
+                    handler.postDelayed(this, delay);
+                }else{
+                    btnSiguiente.setEnabled(true);
+                }
+            }
+        }, delay);
     }
 }
