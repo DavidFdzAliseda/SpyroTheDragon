@@ -61,12 +61,10 @@ public class CharactersFragment extends Fragment {
             if (sign.getVisibility() == View.GONE) {
                 mostrarGuiaAbout(guideLayout);
             }
-
             mostrarGuia();
         }
+
         binding = FragmentCharactersBinding.inflate(inflater, container, false);
-
-
 
         // Inicializamos el RecyclerView y el adaptador
         recyclerView = binding.recyclerViewCharacters;

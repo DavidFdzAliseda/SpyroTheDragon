@@ -15,9 +15,9 @@ public class CircleDrawable extends Drawable {
 
     public CircleDrawable() {
         paint = new Paint();
-        paint.setColor(Color.parseColor("#9C35BA")); // Set the color of the circle
+        paint.setColor(Color.parseColor("#9C35BA"));
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(10); // Set the stroke width
+        paint.setStrokeWidth(10);
     }
 
     @Override

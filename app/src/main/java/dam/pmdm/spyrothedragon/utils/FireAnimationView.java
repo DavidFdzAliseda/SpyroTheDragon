@@ -22,8 +22,8 @@ public class FireAnimationView extends View {
     private ValueAnimator animator;
     private Bitmap backgroundBitmap; // Imagen de fondo
     private Rect backgroundRect; // Rectángulo para ajustar la imagen
-    private MediaPlayer mediaPlayer; // 🎵 Controlador de sonido
-    private boolean isSoundPlaying = false; // 🔊 Controla si el sonido está activo
+    private MediaPlayer mediaPlayer; //Controlador de sonido
+    private boolean isSoundPlaying = false; //Controla si el sonido está activo
 
 
     public FireAnimationView(Context context) {

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +14,6 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,7 +34,6 @@ import dam.pmdm.spyrothedragon.R;
 import dam.pmdm.spyrothedragon.adapters.CollectiblesAdapter;
 import dam.pmdm.spyrothedragon.databinding.FragmentCollectiblesBinding;
 import dam.pmdm.spyrothedragon.models.Collectible;
-import dam.pmdm.spyrothedragon.utils.Utilities;
 
 public class CollectiblesFragment extends Fragment {
 
@@ -68,8 +65,6 @@ public class CollectiblesFragment extends Fragment {
 
         return binding.getRoot();
     }
-
-
 
     private void mostrarGuia() {
         View guideLayout = requireActivity().findViewById(R.id.tutorialLayout);
@@ -112,8 +107,6 @@ public class CollectiblesFragment extends Fragment {
                             .setExitAnim(R.anim.slide_out_right)
                             .setEnterAnim(R.anim.slide_in_left)
                             .build());
-
-
         });
     }
 

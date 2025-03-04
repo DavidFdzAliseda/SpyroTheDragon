@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
@@ -56,13 +57,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean selectedBottomMenu(@NonNull MenuItem menuItem) {
+
+        NavOptions navOptions = new NavOptions.Builder()
+                .setEnterAnim(R.anim.slide_in_top)       // Entra desde arriba
+                .setExitAnim(R.anim.slide_out_bottom)   // Sale cayendo hacia abajo
+                .build();
+
         if (menuItem.getItemId() == R.id.nav_characters)
-            navController.navigate(R.id.navigation_characters);
+            navController.navigate(R.id.navigation_characters, null, navOptions);
+        else if (menuItem.getItemId() == R.id.nav_worlds)
+            navController.navigate(R.id.navigation_worlds, null, navOptions);
         else
-        if (menuItem.getItemId() == R.id.nav_worlds)
-            navController.navigate(R.id.navigation_worlds);
-        else
-            navController.navigate(R.id.navigation_collectibles);
+            navController.navigate(R.id.navigation_collectibles, null, navOptions);
+
         return true;
 
     }

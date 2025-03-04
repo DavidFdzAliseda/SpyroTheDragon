@@ -44,14 +44,14 @@ public class WelcomeFragment extends Fragment {
         boolean tutorialFinished = preferences.getBoolean(TUTORIAL_FINISHED_KEY, false);
 
         // Comprobar si el tutorial ha sido realizado u omitido
-       /* if (tutorialFinished) {
+        if (tutorialFinished) {
             navController.navigate(R.id.action_navigation_welcome_to_navigation_characters,
                     null,
                     new NavOptions.Builder()
                             .setExitAnim(R.anim.circular_exit)
                             .build());
             return;
-        }*/
+        }
 
         ImageView gifView = binding.gifView;
         Glide.with(this).asGif().load(R.drawable.spyro_walking).into(gifView);

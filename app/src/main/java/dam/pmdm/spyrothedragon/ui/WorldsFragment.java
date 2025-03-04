@@ -35,7 +35,6 @@ import dam.pmdm.spyrothedragon.R;
 import dam.pmdm.spyrothedragon.adapters.WorldsAdapter;
 import dam.pmdm.spyrothedragon.databinding.FragmentWorldsBinding;
 import dam.pmdm.spyrothedragon.models.World;
-import dam.pmdm.spyrothedragon.utils.Utilities;
 
 public class WorldsFragment extends Fragment {
 
@@ -55,6 +54,7 @@ public class WorldsFragment extends Fragment {
         if (!tutorialFinished) {
             mostrarGuia();
         }
+
         binding = FragmentWorldsBinding.inflate(inflater, container, false);
         recyclerView = binding.recyclerViewWorlds;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
