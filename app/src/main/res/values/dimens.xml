@@ -1,5 +1,27 @@
+
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+    <!-- Margenes -->
+    <dimen name="margin_small">5dp</dimen>
+    <dimen name="margin_medium">10dp</dimen>
+    <dimen name="margin_large">20dp</dimen>
+    <dimen name="margin_xlarge">50dp</dimen>
+    <dimen name="margin_xxlarge">100dp</dimen>
+    <dimen name="margin_xxllarge">150dp</dimen>
+    <dimen name="margin_xxxlarge">250dp</dimen>
+
+    <!-- Padding -->
+    <dimen name="padding_small">16dp</dimen>
+    <dimen name="padding_large">25dp</dimen>
+
+    <!-- Tamaños de texto -->
+    <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_medium">18sp</dimen>
+    <dimen name="text_size_large">24sp</dimen>
+    <dimen name="text_size_xlarge">38sp</dimen>
+
+    <!-- Tamaños de elementos -->
+    <dimen name="arrow_size">50dp</dimen>
+    <dimen name="sign_width">110dp</dimen>
+    <dimen name="sign_height">90dp</dimen>
+    <dimen name="spyro_img">250dp</dimen>
 </resources>

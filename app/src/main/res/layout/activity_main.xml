@@ -33,4 +33,8 @@
     <include
         android:id="@+id/tutorialLayout"
         layout="@layout/guide"/>
+
+    <include
+        android:id="@+id/resumenLayout"
+        layout="@layout/resumen"/>
 </RelativeLayout>

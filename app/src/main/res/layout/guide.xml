@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/guideLayout"
@@ -8,133 +9,103 @@
     android:focusable="true"
     android:visibility="gone">
 
-    <!-- TextView positioned 500dp from the top and centered horizontally -->
+    <!-- Flecha -->
     <TextView
         android:id="@+id/arrow"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="@dimen/arrow_size"
+        android:layout_height="@dimen/arrow_size"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
         android:layout_gravity="top|end"
         android:background="@drawable/flecha"
         android:rotation="180"
         android:gravity="center"
         android:visibility="gone"/>
 
+    <!-- Bocadillo de personajes -->
     <TextView
-        android:id="@+id/bocadilloCharacter"
+        android:id="@+id/bocadillo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="100dp"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_xxlarge"
         android:background="@drawable/bocadillo"
         android:gravity="center"
         android:minLines="2"
         android:maxLines="4"
-        android:padding="25dp"
+        android:padding="@dimen/padding_large"
         android:text="@string/bocadillo_characters"
         android:textColor="@color/white"
-        android:textSize="24sp" />
+        android:textSize="@dimen/text_size_large" />
 
-    <TextView
-        android:id="@+id/bocadilloWorlds"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="100dp"
-        android:background="@drawable/bocadillo"
-        android:gravity="center"
-        android:minLines="2"
-        android:maxLines="4"
-        android:padding="25dp"
-        android:text="@string/bocadillo_characters"
-        android:textColor="@color/white"
-        android:textSize="24sp" />
-
-    <TextView
-        android:id="@+id/bocadilloCollectibles"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="100dp"
-        android:background="@drawable/bocadillo"
-        android:gravity="center"
-        android:minLines="2"
-        android:maxLines="4"
-        android:padding="25dp"
-        android:text="@string/bocadillo_characters"
-        android:textColor="@color/white"
-        android:textSize="24sp" />
-
+    <!-- Bocadillo Acerca de -->
     <TextView
         android:id="@+id/bocadillo_about"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="150dp"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_xlarge"
         android:background="@drawable/bocadillo"
         android:gravity="center"
         android:minLines="2"
         android:maxLines="4"
-        android:padding="25dp"
+        android:padding="@dimen/padding_large"
         android:text="@string/bocadillo_about"
         android:textColor="@color/white"
-        android:textSize="24sp"
+        android:textSize="@dimen/text_size_large"
         android:visibility="gone"/>
 
+    <!-- Indicador de interacción -->
     <TextView
         android:id="@+id/sign"
-        android:layout_width="110dp"
-        android:layout_height="90dp"
+        android:layout_width="@dimen/sign_width"
+        android:layout_height="@dimen/sign_height"
         android:layout_gravity="bottom"
         android:background="@drawable/empty_circle"
         android:gravity="center"/>
 
-    <!-- Button positioned just above the TextView and flush against the right edge -->
+    <!-- Botón Siguiente -->
     <Button
         android:id="@+id/btnSiguiente"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="250dp"
-        android:text="Siguiente"
-        android:textSize="18sp"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_xxxlarge"
+        android:text="@string/next"
+        android:textSize="@dimen/text_size_medium"
         android:textStyle="bold"
         android:background="@drawable/button_shape"
         android:textColor="@color/purple"/>
 
+    <!-- Botón Finalizar Tutorial -->
     <Button
         android:id="@+id/btnFinalizarTutorial"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="50dp"
-        android:text="Finalizar Tutorial"
-        android:textSize="18sp"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_xxllarge"
+        android:text="@string/finish_tutorial"
+        android:textSize="@dimen/text_size_medium"
         android:textStyle="bold"
         android:background="@drawable/button_shape"
         android:textColor="@color/purple"
         android:visibility="gone"/>
 
-
+    <!-- Botón Saltar -->
     <Button
         android:id="@+id/btnSaltar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:text="Omitir tutorial"
-        android:textSize="18sp"
+        android:text="@string/skip_tutorial"
+        android:textSize="@dimen/text_size_medium"
         android:textStyle="bold"
         android:background="@drawable/button_shape"
         android:textColor="@color/purple"/>

@@ -49,4 +49,7 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation (libs.navigation.fragment)
     implementation (libs.navigation.ui)
+    implementation ("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
+
 }

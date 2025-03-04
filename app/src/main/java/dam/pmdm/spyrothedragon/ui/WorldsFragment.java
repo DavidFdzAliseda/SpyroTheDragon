@@ -3,6 +3,8 @@ package dam.pmdm.spyrothedragon.ui;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -10,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -39,12 +43,18 @@ public class WorldsFragment extends Fragment {
     private RecyclerView recyclerView;
     private WorldsAdapter adapter;
     private List<World> worldsList;
+    private static final String PREFS_NAME = "appPrefs";
+    private static final String TUTORIAL_FINISHED_KEY = "tutorialFinished";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        mostrarGuia();
+        SharedPreferences preferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        boolean tutorialFinished = preferences.getBoolean(TUTORIAL_FINISHED_KEY, false);
 
+        if (!tutorialFinished) {
+            mostrarGuia();
+        }
         binding = FragmentWorldsBinding.inflate(inflater, container, false);
         recyclerView = binding.recyclerViewWorlds;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -59,13 +69,7 @@ public class WorldsFragment extends Fragment {
     private void mostrarGuia() {
         View guideLayout = requireActivity().findViewById(R.id.tutorialLayout);
         if (guideLayout != null) {
-            guideLayout.setVisibility(View.VISIBLE);
-            // Se muestra el texto y se anima
-            TextView bocadillo = guideLayout.findViewById(R.id.bocadilloWorlds);
-            if (bocadillo != null) {
-                bocadillo.setText(R.string.bocadillo_worlds);
-                //animateBocadillo(bocadillo);
-            }
+
             //Se reubica la señal de la seccion
             View signView = guideLayout.findViewById(R.id.sign); // Obtén el elemento por su ID
             if (signView != null) {
@@ -78,17 +82,51 @@ public class WorldsFragment extends Fragment {
                     }
                 });
             }
-            //Boton siguiente
-            Button btnSiguiente = guideLayout.findViewById(R.id.btnSiguiente);
-            btnSiguiente.setOnClickListener(v -> {
-                NavHostFragment.findNavController(this).navigate(R.id.action_navigation_worlds_to_navigation_collectibles,
-                        null,
-                        new NavOptions.Builder()
-                                .setExitAnim(R.anim.slide_out_left)
-                                .setEnterAnim(R.anim.slide_in_right)
-                                .build());
-            });
+
+            // Logica Siguiente
+            siguienteGuia(guideLayout);
         }
+    }
+
+    private void siguienteGuia(View guideLayout) {
+        //Boton siguiente
+        Button btnSiguiente = guideLayout.findViewById(R.id.btnSiguiente);
+        btnSiguiente.setOnClickListener(v -> {
+            TextView bocadillo = guideLayout.findViewById(R.id.bocadillo);
+            animacionBocadillo(bocadillo);
+
+            MediaPlayer mediaPlayer = MediaPlayer.create(v.getContext(), R.raw.bocadillo);
+            mediaPlayer.start();
+
+            NavHostFragment.findNavController(this).navigate(R.id.action_navigation_worlds_to_navigation_collectibles,
+                    null,
+                    new NavOptions.Builder()
+                            .setExitAnim(R.anim.slide_out_left)
+                            .setEnterAnim(R.anim.slide_in_right)
+                            .build());
+        });
+    }
+
+    private void animacionBocadillo(TextView bocadillo) {
+        Animation salir = AnimationUtils.loadAnimation(bocadillo.getContext(), R.anim.slide_out_left);
+        Animation entrar = AnimationUtils.loadAnimation(bocadillo.getContext(), R.anim.slide_in_right);
+
+        salir.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                // Cambiar texto después de salir
+                bocadillo.setText(R.string.bocadillo_collectibles);
+                bocadillo.startAnimation(entrar);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+
+        bocadillo.startAnimation(salir);
     }
 
     private void redimensionarSign(View signView, int width) {
@@ -185,7 +223,7 @@ public class WorldsFragment extends Fragment {
     }
 
     public static void animateBocadillo(View guideLayout) {
-        TextView bocadillo = guideLayout.findViewById(R.id.bocadilloWorlds);
+        TextView bocadillo = guideLayout.findViewById(R.id.bocadillo);
         final String fullText = bocadillo.getText().toString(); // Save complete message
         bocadillo.setText(""); // Clear for the animation
         final Handler handler = new Handler();

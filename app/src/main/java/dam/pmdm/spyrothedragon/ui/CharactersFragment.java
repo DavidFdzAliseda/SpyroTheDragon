@@ -2,8 +2,10 @@ package dam.pmdm.spyrothedragon.ui;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,20 +13,17 @@ import android.view.ViewGroup;
 import android.content.SharedPreferences;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavBackStackEntry;
-import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -38,7 +37,6 @@ import dam.pmdm.spyrothedragon.R;
 import dam.pmdm.spyrothedragon.models.Character;
 import dam.pmdm.spyrothedragon.adapters.CharactersAdapter;
 import dam.pmdm.spyrothedragon.databinding.FragmentCharactersBinding;
-import dam.pmdm.spyrothedragon.utils.Utilities;
 
 
 public class CharactersFragment extends Fragment {
@@ -53,20 +51,22 @@ public class CharactersFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        SharedPreferences preferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        boolean tutorialFinished = preferences.getBoolean(TUTORIAL_FINISHED_KEY, false);
 
-        View guideLayout = requireActivity().findViewById(R.id.tutorialLayout);
-        TextView bocadillo = guideLayout.findViewById(R.id.bocadilloCharacter);
-        String bocadilloCollectibles = getString(R.string.bocadillo_collectibles);
-        //Comprueba si viene de la pantalla de coleccionables
-        if (bocadillo.getText().equals(bocadilloCollectibles)) {
-            mostrarGuiaAbout(guideLayout);
+        if (!tutorialFinished) {
+            View guideLayout = requireActivity().findViewById(R.id.tutorialLayout);
+            TextView sign = guideLayout.findViewById(R.id.sign);
+            //Comprueba si viene de la pantalla de coleccionables
+            if (sign.getVisibility() == View.GONE) {
+                mostrarGuiaAbout(guideLayout);
+            }
+
+            mostrarGuia();
         }
-
-        mostrarGuia();
-
         binding = FragmentCharactersBinding.inflate(inflater, container, false);
 
-        //}
+
 
         // Inicializamos el RecyclerView y el adaptador
         recyclerView = binding.recyclerViewCharacters;
@@ -89,11 +89,8 @@ public class CharactersFragment extends Fragment {
         TextView btnSiguiente = guideLayout.findViewById(R.id.btnSiguiente);
         btnSiguiente.setVisibility(View.GONE);
 
-        TextView bocadillo = guideLayout.findViewById(R.id.bocadilloCollectibles);
+        TextView bocadillo = guideLayout.findViewById(R.id.bocadillo);
         bocadillo.setVisibility(View.GONE);
-
-        TextView sign = guideLayout.findViewById(R.id.sign);
-        sign.setVisibility(View.GONE);
 
         //Se hacen visibles los elementos necesarios
         TextView arrow = guideLayout.findViewById(R.id.arrow);
@@ -104,8 +101,66 @@ public class CharactersFragment extends Fragment {
 
         TextView btnFinalizarTutorial = guideLayout.findViewById(R.id.btnFinalizarTutorial);
         btnFinalizarTutorial.setVisibility(View.VISIBLE);
+        setListenerBtonFinTutorial(btnFinalizarTutorial);
 
         animarFlecha(arrow);
+
+        View navView = requireActivity().findViewById(R.id.action_info);
+        navView.setClickable(true);
+        navView.setEnabled(true);
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            if  (guideLayout.getVisibility() != View.GONE) {
+                navView.performClick();
+            }
+        }, 4000); // 5000 milisegundos = 5 segundos
+
+        View resumenLayout = requireActivity().findViewById(R.id.resumenLayout);
+        TextView btnComenzarAvenura = resumenLayout.findViewById(R.id.btnComenzarAventura);
+        btnComenzarAvenura.setOnClickListener(v -> {
+            MediaPlayer mediaPlayer = MediaPlayer.create(v.getContext(), R.raw.fin);
+            mediaPlayer.start();
+            resumenLayout.animate()
+                    .translationY(resumenLayout.getHeight()) // Mueve hacia abajo el tamaño del View
+                    .alpha(0) // Hace que desaparezca suavemente
+                    .setDuration(300) // Duración de la animación
+                    .withEndAction(() -> resumenLayout.setVisibility(View.GONE)) // Oculta la vista después de la animación
+                    .start();
+
+            //Actualiza el estado del tutorial
+            SharedPreferences preferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean(TUTORIAL_FINISHED_KEY, true);
+            editor.apply();
+        });
+    }
+
+    private void setListenerBtonFinTutorial(TextView btnFinalizarTutorial) {
+        btnFinalizarTutorial.setOnClickListener(v -> {
+
+            MediaPlayer mediaPlayer = MediaPlayer.create(v.getContext(), R.raw.bocadillo);
+            mediaPlayer.start();
+            View guideLayout = requireActivity().findViewById(R.id.tutorialLayout);
+            //guideLayout.setVisibility(View.GONE);
+            guideLayout.animate()
+                    .translationY(guideLayout.getHeight()) // Mueve hacia abajo el tamaño del View
+                    .alpha(0) // Hace que desaparezca suavemente
+                    .setDuration(300) // Duración de la animación
+                    .withEndAction(() -> guideLayout.setVisibility(View.GONE)) // Oculta la vista después de la animación
+                    .start();
+
+            View resumenLayout = requireActivity().findViewById(R.id.resumenLayout);
+            resumenLayout.setAlpha(0);
+            resumenLayout.setVisibility(View.VISIBLE);
+
+            resumenLayout.setTranslationY(-resumenLayout.getHeight()); // Lo coloca fuera de la pantalla (arriba)
+
+            resumenLayout.animate()
+                    .translationY(0) // Mueve el View a su posición original
+                    .alpha(1) // Aparece suavemente
+                    .setDuration(300) // Duración de la animación
+                    .start();
+        });
     }
 
     private void animarFlecha(TextView arrow) {
@@ -132,11 +187,6 @@ public class CharactersFragment extends Fragment {
         View guideLayout = requireActivity().findViewById(R.id.tutorialLayout);
         if (guideLayout != null) {
             guideLayout.setVisibility(View.VISIBLE);
-            // Se muestra el texto y se anima
-            TextView bocadillo = guideLayout.findViewById(R.id.bocadilloCharacter);
-            if (bocadillo != null) {
-                //animateBocadillo(guideLayout);
-            }
 
             View signView = guideLayout.findViewById(R.id.sign); // Obtén el elemento por su ID
             if (signView != null) {
@@ -149,7 +199,7 @@ public class CharactersFragment extends Fragment {
                     }
                 });
             }
-
+            //Deshabilita about
             View navView = requireActivity().findViewById(R.id.action_info);
             if (navView != null) {
                 navView.setClickable(false);
@@ -167,6 +217,10 @@ public class CharactersFragment extends Fragment {
     private void siguienteGuia(View guideLayout) {
         Button btnSiguiente = guideLayout.findViewById(R.id.btnSiguiente);
         btnSiguiente.setOnClickListener(v -> {
+            TextView bocadillo = guideLayout.findViewById(R.id.bocadillo);
+            animacionBocadillo(bocadillo);
+            MediaPlayer mediaPlayer = MediaPlayer.create(v.getContext(), R.raw.bocadillo);
+            mediaPlayer.start();
             NavHostFragment.findNavController(this).navigate(R.id.action_navigation_characters_to_navigation_worlds,
                     null,
                     new NavOptions.Builder()
@@ -177,6 +231,29 @@ public class CharactersFragment extends Fragment {
 
     }
 
+    private void animacionBocadillo(TextView bocadillo) {
+        Animation salir = AnimationUtils.loadAnimation(bocadillo.getContext(), R.anim.slide_out_left);
+        Animation entrar = AnimationUtils.loadAnimation(bocadillo.getContext(), R.anim.slide_in_right);
+
+        salir.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                // Cambiar texto después de salir
+                bocadillo.setText(R.string.bocadillo_worlds);
+                bocadillo.startAnimation(entrar);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+
+        bocadillo.startAnimation(salir);
+    }
+
+
     private void saltarGuia(View guideLayout, SharedPreferences preferences) {
         Button btnSaltar = guideLayout.findViewById(R.id.btnSaltar);
         if (btnSaltar != null) {
@@ -184,17 +261,17 @@ public class CharactersFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     guideLayout.animate()
-                            .alpha(0f)
-                            .setDuration(300)
-                            .withEndAction(new Runnable() {
-                                @Override
-                                public void run() {
-                                    guideLayout.setVisibility(View.GONE);
+                            .translationY(guideLayout.getHeight()) // Mueve hacia abajo el tamaño del View
+                            .alpha(0) // Hace que desaparezca suavemente
+                            .setDuration(300) // Duración de la animación
+                            .withEndAction(() -> guideLayout.setVisibility(View.GONE)) // Oculta la vista después de la animación
+                            .start();
 
-                                }
-                            });
+                    View navView = requireActivity().findViewById(R.id.action_info);
+                    navView.setClickable(true);
+                    navView.setEnabled(true);
 
-                    // Octualiza el estado del tutorial
+                    //Actualiza el estado del tutorial
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putBoolean(TUTORIAL_FINISHED_KEY, true);
                     editor.apply();
@@ -252,10 +329,8 @@ public class CharactersFragment extends Fragment {
                         }
                         break;
                 }
-
                 eventType = parser.next();
             }
-
             adapter.notifyDataSetChanged(); // Notificamos al adaptador que los datos han cambiado
         } catch (Exception e) {
             e.printStackTrace();
@@ -264,7 +339,7 @@ public class CharactersFragment extends Fragment {
 
     private void setCircle() {
         new Handler().postDelayed(() -> {
-            TextView bocadillo = requireView().findViewById(R.id.bocadilloCharacter);
+            TextView bocadillo = requireView().findViewById(R.id.bocadillo);
             BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.navView);
             View itemCharacters = bottomNavigationView.findViewById(R.id.nav_characters);
 
@@ -316,30 +391,5 @@ public class CharactersFragment extends Fragment {
         animatorSet.setDuration(1000);
         animatorSet.start();
 
-    }
-
-    public static void animateBocadillo(View guideLayout) {
-        TextView bocadillo = guideLayout.findViewById(R.id.bocadilloCharacter);
-        final String fullText = bocadillo.getText().toString(); // Save complete message
-        bocadillo.setText(""); // Clear for the animation
-        final Handler handler = new Handler();
-        final int delay = 25; // Delay between characters in milliseconds
-        final int[] index = {0};
-        TextView btnSiguiente = guideLayout.findViewById(R.id.btnSiguiente);
-        btnSiguiente.setEnabled(false);
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (index[0] < fullText.length()) {
-                    // Append one more character and update the TextView
-                    bocadillo.setText(fullText.substring(0, index[0] + 1));
-                    index[0]++;
-                    handler.postDelayed(this, delay);
-                } else {
-                    // Cuando la animación termine, habilitar el botón
-                    btnSiguiente.setEnabled(true);
-                }
-            }
-        }, delay);
     }
 }

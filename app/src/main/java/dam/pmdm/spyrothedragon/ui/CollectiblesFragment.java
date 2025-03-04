@@ -3,6 +3,8 @@ package dam.pmdm.spyrothedragon.ui;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -10,7 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,11 +44,18 @@ public class CollectiblesFragment extends Fragment {
     private RecyclerView recyclerView;
     private CollectiblesAdapter adapter;
     private List<Collectible> collectiblesList;
+    private static final String PREFS_NAME = "appPrefs";
+    private static final String TUTORIAL_FINISHED_KEY = "tutorialFinished";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        mostrarGuia();
+        SharedPreferences preferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        boolean tutorialFinished = preferences.getBoolean(TUTORIAL_FINISHED_KEY, false);
+
+        if (!tutorialFinished) {
+            mostrarGuia();
+        }
 
         binding = FragmentCollectiblesBinding.inflate(inflater, container, false);
         recyclerView = binding.recyclerViewCollectibles;
@@ -53,20 +65,16 @@ public class CollectiblesFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         loadCollectibles();
+
         return binding.getRoot();
     }
+
+
 
     private void mostrarGuia() {
         View guideLayout = requireActivity().findViewById(R.id.tutorialLayout);
         if (guideLayout != null) {
-            guideLayout.setVisibility(View.VISIBLE);
-            // Se muestra el texto y se anima
-            TextView bocadillo = guideLayout.findViewById(R.id.bocadilloCollectibles);
-            if (bocadillo != null) {
-                bocadillo.setText(R.string.bocadillo_collectibles);
-                //animateBocadillo(bocadillo);
-            }
-            //Se reubica la señal de la seccion
+                        //Se reubica la señal de la seccion
             View signView = guideLayout.findViewById(R.id.sign); // Obtén el elemento por su ID
             if (signView != null) {
                 signView.post(new Runnable() {
@@ -78,17 +86,41 @@ public class CollectiblesFragment extends Fragment {
                     }
                 });
             }
-            //Boton siguiente
-            Button btnSiguiente = guideLayout.findViewById(R.id.btnSiguiente);
-            btnSiguiente.setOnClickListener(v -> {
-                NavHostFragment.findNavController(this).navigate(R.id.action_navigation_collectibles_to_navigation_characters,
-                        null,
-                        new NavOptions.Builder()
-                                .setExitAnim(R.anim.slide_out_right)
-                                .setEnterAnim(R.anim.slide_in_left)
-                                .build());
-            });
+
+            // Logica Siguiente
+            siguienteGuia(guideLayout);
+
         }
+    }
+
+    private void siguienteGuia(View guideLayout) {
+        //Boton siguiente
+        Button btnSiguiente = guideLayout.findViewById(R.id.btnSiguiente);
+        btnSiguiente.setOnClickListener(v -> {
+            TextView bocadillo = guideLayout.findViewById(R.id.bocadillo);
+            animacionBocadillo(bocadillo);
+
+            MediaPlayer mediaPlayer = MediaPlayer.create(v.getContext(), R.raw.bocadillo);
+            mediaPlayer.start();
+
+            TextView sign = guideLayout.findViewById(R.id.sign);
+            sign.setVisibility(View.GONE);
+
+            NavHostFragment.findNavController(this).navigate(R.id.action_navigation_collectibles_to_navigation_characters,
+                    null,
+                    new NavOptions.Builder()
+                            .setExitAnim(R.anim.slide_out_right)
+                            .setEnterAnim(R.anim.slide_in_left)
+                            .build());
+
+
+        });
+    }
+
+    private void animacionBocadillo(TextView bocadillo) {
+        Animation salir = AnimationUtils.loadAnimation(bocadillo.getContext(), R.anim.slide_out_left);
+
+        bocadillo.startAnimation(salir);
     }
 
     private void redimensionarSign(View signView, int width) {
@@ -183,27 +215,5 @@ public class CollectiblesFragment extends Fragment {
             e.printStackTrace();
         }
     }
-    public static void animateBocadillo(View guideLayout) {
-        TextView bocadillo = guideLayout.findViewById(R.id.bocadilloCollectibles);
-        final String fullText = bocadillo.getText().toString(); // Save complete message
-        bocadillo.setText(""); // Clear for the animation
-        final Handler handler = new Handler();
-        final int delay = 25; // Delay between characters in milliseconds
-        final int[] index = {0};
-        TextView btnSiguiente = guideLayout.findViewById(R.id.btnSiguiente);
-        btnSiguiente.setEnabled(false);
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (index[0] < fullText.length()) {
-                    // Append one more character and update the TextView
-                    bocadillo.setText(fullText.substring(0, index[0] + 1));
-                    index[0]++;
-                    handler.postDelayed(this, delay);
-                }else{
-                    btnSiguiente.setEnabled(true);
-                }
-            }
-        }, delay);
-    }
+
 }

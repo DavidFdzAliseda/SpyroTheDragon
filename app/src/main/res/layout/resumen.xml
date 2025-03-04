@@ -5,83 +5,83 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple60">
+    android:background="@color/purple60"
+    android:visibility="visible">
 
+    <!-- Título Bienvenido -->
     <TextView
         android:id="@+id/txtBienvenido"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title_welcome"
-        android:textSize="@dimen/text_size_xlarge"
+        android:text="@string/title_congratulations"
+        android:textSize="@dimen/text_size_large"
         android:textStyle="bold"
         android:textColor="@color/white"
-        android:paddingTop="@dimen/margin_large"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingTop="@dimen/padding_large"/>
 
+    <!-- Descripción -->
     <TextView
         android:id="@+id/txtDescripcion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/description_welcome"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:text="@string/tutorial"
         android:textSize="@dimen/text_size_medium"
-        android:padding="@dimen/margin_medium"
         android:textColor="@color/white"
         app:layout_constraintTop_toBottomOf="@id/txtBienvenido"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <ImageView
-        android:id="@+id/titulo"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/sign_height"
-        android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginBottom="@dimen/margin_xlarge"
-        android:src="@drawable/titulo"
         app:layout_constraintEnd_toEndOf="parent"
+        android:padding="@dimen/padding_small"/>
+
+    <TextView
+        android:id="@+id/txtLogros"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_small"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:text="@string/resume"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_medium"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtDescripcion" />
-
     <TextView
-        android:id="@+id/txtDescripcion2"
+        android:id="@+id/txtSecretos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/margin_medium"
-        android:text="@string/description_details"
+        android:padding="@dimen/padding_small"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:text="@string/easter_egg"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_medium"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titulo" />
+        app:layout_constraintTop_toBottomOf="@+id/txtLogros" />
 
-    <TextView
-        android:id="@+id/txtDescripcionBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_large"
-        android:padding="@dimen/margin_medium"
-        android:text="@string/description_start"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_medium"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtDescripcion2" />
-
+    <!-- Imagen Spyro -->
     <ImageView
-        android:id="@+id/gifView"
+        android:id="@+id/imgSpyro"
         android:layout_width="@dimen/spyro_img"
         android:layout_height="@dimen/spyro_img"
-        android:layout_marginBottom="@dimen/margin_medium"
-        app:layout_constraintBottom_toTopOf="@+id/btnComenzar"
+        android:src="@drawable/spyro"
+        android:layout_marginBottom="@dimen/margin_large"
+        app:layout_constraintBottom_toTopOf="@+id/btnComenzarAventura"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Botón Comenzar -->
     <Button
-        android:id="@+id/btnComenzar"
+        android:id="@+id/btnComenzarAventura"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_comenzar"
-        android:layout_marginBottom="@dimen/margin_xlarge"
+        android:text="@string/start_adventure"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="@dimen/margin_xlarge"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

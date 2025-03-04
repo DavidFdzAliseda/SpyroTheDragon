@@ -2,6 +2,7 @@ package dam.pmdm.spyrothedragon.ui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,6 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
 
 import dam.pmdm.spyrothedragon.R;
 import dam.pmdm.spyrothedragon.databinding.FragmentWelcomeBinding;
@@ -39,8 +43,8 @@ public class WelcomeFragment extends Fragment {
         SharedPreferences preferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         boolean tutorialFinished = preferences.getBoolean(TUTORIAL_FINISHED_KEY, false);
 
-        // If the tutorial has been finished, navigate immediately to the next fragment
-        /*if (tutorialFinished) {
+        // Comprobar si el tutorial ha sido realizado u omitido
+       /* if (tutorialFinished) {
             navController.navigate(R.id.action_navigation_welcome_to_navigation_characters,
                     null,
                     new NavOptions.Builder()
@@ -49,8 +53,12 @@ public class WelcomeFragment extends Fragment {
             return;
         }*/
 
-        // Otherwise, remain in this fragment and wait for user action
+        ImageView gifView = binding.gifView;
+        Glide.with(this).asGif().load(R.drawable.spyro_walking).into(gifView);
+
         binding.btnComenzar.setOnClickListener(v -> {
+            MediaPlayer mediaPlayer = MediaPlayer.create(v.getContext(), R.raw.fin);
+            mediaPlayer.start();
             navController.navigate(R.id.action_navigation_welcome_to_navigation_characters,
                     null,
                     new NavOptions.Builder()
